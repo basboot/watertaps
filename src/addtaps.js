@@ -10,6 +10,7 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
 
     const currentDateTime = new Date().toISOString();
 
+    // TODO: reduce headers
 
     try {
         // set headers to replay browser requests
@@ -41,11 +42,7 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
 
         const route_data = await route_response.json();
 
-
-        console.log(route_data);
-
         for (const waypoint of route_data.waypoints) {
-            // console.log(">>>", seg)
 
             for (let i = 0; i < tap_data.features.length; i++) {
 
@@ -68,8 +65,6 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
                 }
             }
         }
-
-        console.log(nearby_taps);
 
         // nearby taps identified, create array with pois to add to the route
         const pois = [];
@@ -95,18 +90,6 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
 
         console.log(pois);
 
-
-        //         {
-        //             "type": "control",
-        //             "name": "14",
-        //             "description": "",
-        //             "location": {
-        //                 "lat": 51.962275015486085,
-        //                 "lng": 4.23428211349156
-        //             },
-        //             "sourceId": "40857.route.4d7390e9-3698-45f8-a803-b1a68209a3ad"
-        //         }
-
         // create json_object for PUT
         const modified_route = {
             "id": route_data.id,
@@ -119,7 +102,7 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
             "surfaceSummary": route_data.surfaceSummary
         };
 
-        await delay(1000);
+        await delay(100);
         // send modified route to Hammerhead
 
         await fetch(route_uri, {
@@ -166,8 +149,6 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
             "method": "POST"
         });
 
-
-        console.log(modified_route)
 
     } catch (e) {
         console.log("Something went wrong", e);
