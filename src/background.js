@@ -1,3 +1,5 @@
+import { addWaterTaps } from "./addtaps";
+
 chrome.runtime.onInstalled.addListener(() => {
   console.log("add text");
   chrome.action.setBadgeText({
@@ -19,24 +21,26 @@ chrome.action.onClicked.addListener(async (tab) => {
 });
 
 // Listen for the message from the content script
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   if (message.jwtToken !== undefined) {
-    console.log("JWT Token:", message.jwtToken);
-    console.log("Cookie:", message.cookie);
+    const jwtToken = message.jwtToken;
+    const cookie = message.cookie;
+
+    // https://dashboard.hammerhead.io/routes/40857.route.e1b7dc3c-a209-45e7-8925-eda8dcd77944
 
     const routeMatch = sender.tab.url.match(/\/routes\/(\d+)/);
     if (routeMatch) {
-      const routeNumber = routeMatch[1];
-      console.log("Route Number:", routeNumber);
+      const userId = routeMatch[1];
 
-      const fullPath = sender.tab.url.split("/routes/")[1];
-      console.log("Full Path:", fullPath);
+      const routeId = sender.tab.url.split("/routes/")[1];
 
-      console.log("Referrer", sender.tab.url);
-
-      chrome.tabs.update(sender.tab.id, { url: hammerhead });
+      const referrer = sender.tab.url;
 
       // TODO: use route number and jwt to update route
+
+      await addWaterTaps(jwtToken, cookie, userId, routeId, referrer);
+
+      chrome.tabs.update(sender.tab.id, { url: hammerhead });
     }
   }
 });
