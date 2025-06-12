@@ -1,0 +1,27 @@
+{
+  "name": "Watertaps",
+  "description": "Add public watertaps to your route on the Hamerhead Karoo (NL only)",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_icon": "storage_icon.png"
+  },
+  "background": {
+    "service_worker": "assets/background.js"
+  },
+  "permissions": ["activeTab", "scripting"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+B",
+        "mac": "Command+B"
+      }
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/read-jwt.js"],
+      "matches": ["https://dashboard.hammerhead.io/*"]
+    }
+  ]
+}
