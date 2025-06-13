@@ -1,10 +1,21 @@
 {
   "name": "Watertaps",
-  "description": "Add public watertaps to your route on the Hamerhead Karoo (NL only)",
+  "description": "Add public watertaps to your route on Hammerhead Dashboard (NL only, uses data from drinkwaterkaart.nl).",
   "version": "1.0",
   "manifest_version": 3,
+  "icons": {
+    "16": "tap16.png",
+    "32": "tap32.png",
+    "48": "tap48.png",
+    "128": "tap128.png"
+  },
   "action": {
-    "default_icon": "storage_icon.png"
+    "default_icon": {
+      "16": "tap16.png",
+      "32": "tap32.png",
+      "48": "tap48.png",
+      "128": "tap128.png"
+    }
   },
   "background": {
     "service_worker": "assets/background.js"
