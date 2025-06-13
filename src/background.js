@@ -1,12 +1,5 @@
 import { addWaterTaps } from "./addtaps";
 
-chrome.runtime.onInstalled.addListener(() => {
-  console.log("add text");
-  chrome.action.setBadgeText({
-    text: "OFF",
-  });
-});
-
 const hammerhead = "https://dashboard.hammerhead.io/routes";
 
 chrome.action.onClicked.addListener(async (tab) => {
@@ -22,6 +15,7 @@ chrome.action.onClicked.addListener(async (tab) => {
 
 // Listen for the message from the content script
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  console.log("message");
   if (message.jwtToken !== undefined) {
     const jwtToken = message.jwtToken;
     const cookie = message.cookie;
@@ -41,6 +35,19 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       await addWaterTaps(jwtToken, cookie, userId, routeId, referrer);
 
       chrome.tabs.update(sender.tab.id, { url: hammerhead });
+    } else {
+      console.log("Not on page with a route.");
+      chrome.scripting
+        .executeScript({
+          target: { tabId: sender.tab.id },
+          files: ["assets/show-alert.js"],
+        })
+        .then(() => {
+          chrome.tabs.sendMessage(sender.tab.id, {
+            type: "SHOW_ALERT",
+            text: "Cannot add watertaps to new routes, please close route and re-open first.",
+          });
+        });
     }
   }
 });
