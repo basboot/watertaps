@@ -59,6 +59,7 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
                 );
 
                 // if dist < 1km add it to the Set of nearby taps
+                // TODO: put in config
                 if (dist < 1000) {
                     console.log(dist);
                     nearby_taps.add(i);

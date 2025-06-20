@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
       const referrer = sender.tab.url;
 
-      // TODO: use route number and jwt to update route
+      // TODO: use route number and jwt to update route, to make it also work on new routes
 
       await addWaterTaps(jwtToken, cookie, userId, routeId, referrer);
 
