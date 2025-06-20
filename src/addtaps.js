@@ -10,23 +10,13 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
 
     const currentDateTime = new Date().toISOString();
 
-    // TODO: reduce headers
 
     try {
         // set headers to replay browser requests
         const route_uri = `https://dashboard.hammerhead.io/v1/users/${userId}/routes/${routeId}`;
         const request_headers = {
             "accept": "*/*",
-            "accept-language": "nl-NL,nl;q=0.9,en-US;q=0.8,en;q=0.7,fr;q=0.6",
             "authorization": `Bearer ${jwtToken}`,
-            "cache-control": "no-cache",
-            "pragma": "no-cache",
-            "sec-ch-ua": "\"Google Chrome\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"macOS\"",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-origin",
             "cookie": `${cookie}`,
             "Referer": `${referrer}`,
             "Referrer-Policy": "strict-origin-when-cross-origin"
@@ -112,13 +102,9 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
 
         await fetch(route_uri, {
             "headers": {
-                "authorization": request_headers.authorization,
-                "content-type": "application/json",
-                "sec-ch-ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Google Chrome\";v=\"126\"",
-                "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": "\"macOS\"",
-                "Referer": request_headers.Referer,
-                "Referrer-Policy": "strict-origin-when-cross-origin"
+            "authorization": request_headers.authorization,
+            "content-type": "application/json",
+            "Referer": request_headers.Referer
             },
             "body": JSON.stringify(modified_route),
             "method": "PUT"
@@ -128,13 +114,9 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
         // save and finish save (?)
         await fetch("https://dashboard.hammerhead.io/event", {
             "headers": {
-                "accept": "application/json, text/plain, */*",
-                "content-type": "application/json",
-                "sec-ch-ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Google Chrome\";v=\"126\"",
-                "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": "\"macOS\"",
-                "Referer": request_headers.Referer,
-                "Referrer-Policy": "strict-origin-when-cross-origin"
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/json",
+            "Referer": request_headers.Referer
             },
             "body": "{\"hasManualSections\":false,\"source\":\"dashboard\",\"startTime\":\"" + currentDateTime + "\",\"flow\":\"routeEditor\",\"eventType\":\"save\",\"version\":\"2.0.0.master_594\",\"environment\":\"prod\",\"userId\":\"40857\"}",
             "method": "POST"
@@ -142,13 +124,9 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
 
         await fetch("https://dashboard.hammerhead.io/event", {
             "headers": {
-                "accept": "application/json, text/plain, */*",
-                "content-type": "application/json",
-                "sec-ch-ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Google Chrome\";v=\"126\"",
-                "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": "\"macOS\"",
-                "Referer": request_headers.Referer,
-                "Referrer-Policy": "strict-origin-when-cross-origin"
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/json",
+            "Referer": request_headers.Referer
             },
             "body": "{\"saved\":true,\"dirty\":true,\"source\":\"dashboard\",\"startTime\":\"" + currentDateTime + "\",\"flow\":\"routeEditor\",\"eventType\":\"exit\",\"version\":\"2.0.0.master_594\",\"environment\":\"prod\",\"userId\":\"40857\"}",
             "method": "POST"
