@@ -6,7 +6,7 @@ const randomUUID = () => crypto.randomUUID();
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) {
-    const nearby_taps = new Set();
+    
 
     const currentDateTime = new Date().toISOString();
 
@@ -42,6 +42,12 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
 
         const route_data = await route_response.json();
 
+        // remove all current watertaps from the route
+        const pois = route_data.pointsOfInterest.filter(poi => poi.type !== 'water');
+
+        // find taps nearby waypoints, use set to avoid duplicates
+        const nearby_taps = new Set();
+
         for (const waypoint of route_data.waypoints) {
 
             for (let i = 0; i < tap_data.features.length; i++) {
@@ -67,9 +73,7 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
             }
         }
 
-        // nearby taps identified, create array with pois to add to the route
-        const pois = [];
-
+        // nearby taps identified, add them to the route
         for (const tab_id of nearby_taps) {
             console.log(`${tap_data.features[tab_id].properties.latitude}, ${tap_data.features[tab_id].properties.longitude} - ${tap_data.features[tab_id].properties.beschrijvi}`);
 
@@ -99,7 +103,7 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
             "routingType": route_data.routingType,
             "waypoints": route_data.waypoints,
             "routePolyline": route_data.routePolyline,
-            "pointsOfInterest": pois, // TODO: merge instead of replace
+            "pointsOfInterest": pois, 
             "surfaceSummary": route_data.surfaceSummary
         };
 
