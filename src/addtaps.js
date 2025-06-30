@@ -1,7 +1,41 @@
 import * as geolib from "geolib";
 
-const TAP_DATA_URL =
-  "https://data.rivm.nl/geo/alo/wfs?request=GetFeature&service=WFS&version=1.1.0&outputFormat=application%2Fjson&typeName=alo:rivm_drinkwaterkranen_actueel";
+// Use chrome.storage.session to cache tap_data per session
+async function getTapData() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.session.get(["tap_data"], async (result) => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+        return;
+      }
+      if (result.tap_data) {
+        resolve(result.tap_data);
+        return;
+      }
+      try {
+        console.log("read data from rivm");
+        const response = await fetch(
+          "https://data.rivm.nl/geo/alo/wfs?request=GetFeature&service=WFS&version=1.1.0&outputFormat=application%2Fjson&typeName=alo:rivm_drinkwaterkranen_actueel"
+        );
+        if (!response.ok) {
+          reject(new Error(`Failed to fetch tap data: ${response.statusText}`));
+          return;
+        }
+        const tap_data = await response.json();
+        chrome.storage.session.set({ tap_data }, () => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+            return;
+          }
+          resolve(tap_data);
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  });
+}
+
 const randomUUID = () => crypto.randomUUID();
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -10,12 +44,8 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
   const currentDateTime = new Date().toISOString();
 
   try {
-    // Fetch tap_data
-    const response = await fetch(TAP_DATA_URL);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch tap data: ${response.statusText}`);
-    }
-    const tap_data = await response.json();
+    // Fetch tap_data using chrome.storage.session
+    const tap_data = await getTapData();
 
     // set headers to replay browser requests
     const route_uri = `https://dashboard.hammerhead.io/v1/users/${userId}/routes/${routeId}`;

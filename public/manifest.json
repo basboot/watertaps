@@ -20,7 +20,7 @@
   "background": {
     "service_worker": "assets/background.js"
   },
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "storage"],
   "commands": {
     "_execute_action": {
       "suggested_key": {
