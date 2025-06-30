@@ -1,6 +1,6 @@
 import * as geolib from 'geolib';
 
-import tap_data from "./rivm_20240502_drinkwaterkranen" with {"type": "json"};
+import tap_data from "./drinkwaterkranen" with {"type": "json"};
 const randomUUID = () => crypto.randomUUID();
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
