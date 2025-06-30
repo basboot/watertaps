@@ -33,7 +33,8 @@ export async function addWaterTaps(jwtToken, cookie, userId, routeId, referrer) 
         const route_data = await route_response.json();
 
         // remove all current watertaps from the route
-        const pois = route_data.pointsOfInterest.filter(poi => poi.type !== 'water');
+        // if there are no pois for this route the pointsOfInterest key is not in the JSON
+        const pois = (route_data.pointsOfInterest || []).filter(poi => poi.type !== 'water');
 
         // find taps nearby waypoints, use set to avoid duplicates
         const nearby_taps = new Set();
