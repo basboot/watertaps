@@ -46,4 +46,4 @@ https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#lo
 
 - This extension only works with existing routes (not new/unsaved routes)
 - Only works for routes in the Netherlands
-- Uses public watertap data from drinkwaterkaart.nl via RIVM dataset
+- Uses public watertap data from drinkwaterkaart.nl via Nationaal Georegister
